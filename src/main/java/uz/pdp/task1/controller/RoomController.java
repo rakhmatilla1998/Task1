@@ -1,6 +1,9 @@
 package uz.pdp.task1.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.task1.entity.Hotel;
 import uz.pdp.task1.entity.Room;
@@ -28,6 +31,14 @@ public class RoomController {
     public Room getRoom(@PathVariable Integer id) {
         Optional<Room> optionalRoom = roomRepo.findById(id);
         return optionalRoom.orElseGet(Room::new);
+    }
+
+    // Room larni Page qilib qaytaruvchi method ishlatilgan
+    @GetMapping(value = "/getByHotel/{hotelId}")
+    public Page<Room> getRoomsByHotelId(@PathVariable Integer hotelId, @RequestParam Integer page) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        return roomRepo.getAllByHotel_Id(hotelId, pageable);
     }
 
     @PostMapping
